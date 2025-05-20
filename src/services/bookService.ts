@@ -1,8 +1,8 @@
-
 import { Book, BookFormData } from "../models/Book";
 
 // Using CRUDCRUD API with the provided endpoint
-const API_URL = "https://crudcrud.com/api/fedb619670aa4c29b39dc886e996d9d2/books";
+// Note: This endpoint expires after 24 hours. Get a new one from https://crudcrud.com/
+const API_URL = "https://crudcrud.com/api/b8dc730dd370423281d75085343ee566/books";
 
 export const bookService = {
   // Fetch all books with optional search and filter params
