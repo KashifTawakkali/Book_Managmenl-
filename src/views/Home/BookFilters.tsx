@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -43,14 +42,14 @@ export const BookFilters: React.FC<BookFiltersProps> = ({
   };
 
   return (
-    <div className="p-4 bg-white rounded-md shadow-sm space-y-4">
+    <div className="p-4 bg-card rounded-md shadow-sm border space-y-4">
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
           <Input
             placeholder="Search books by title or author..."
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-full"
+            className="w-full bg-background"
           />
         </div>
         <div>
@@ -69,7 +68,7 @@ export const BookFilters: React.FC<BookFiltersProps> = ({
       
       <div className="flex flex-col sm:flex-row gap-4">
         <Select onValueChange={handleGenreChange} defaultValue="all">
-          <SelectTrigger className="w-full sm:w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px] bg-background">
             <SelectValue placeholder="Genre" />
           </SelectTrigger>
           <SelectContent>
@@ -81,7 +80,7 @@ export const BookFilters: React.FC<BookFiltersProps> = ({
         </Select>
         
         <Select onValueChange={handleStatusChange} defaultValue="all">
-          <SelectTrigger className="w-full sm:w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px] bg-background">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>

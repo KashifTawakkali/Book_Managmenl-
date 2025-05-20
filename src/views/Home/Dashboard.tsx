@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { BookFilters } from './BookFilters';
@@ -10,6 +9,7 @@ import { useBooksViewModel } from '@/viewmodels/useBooksViewModel';
 import { Book, BookFormData } from '@/models/Book';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 export const Dashboard: React.FC = () => {
   const [view, setView] = useState<'table' | 'grid'>('table');
@@ -101,82 +101,87 @@ export const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Book Dashboard</h1>
-        <Button onClick={handleAddBook}>Add New Book</Button>
-      </div>
-      
-      <BookFilters
-        onSearch={handleSearch}
-        onGenreFilter={handleGenreFilter}
-        onStatusFilter={handleStatusFilter}
-      />
-      
-      <div className="bg-white rounded-md shadow-sm">
-        <div className="p-4 border-b flex justify-between items-center">
-          <h2 className="text-lg font-medium">Books ({totalBooks})</h2>
-          <Tabs defaultValue="table" value={view} onValueChange={(v) => setView(v as 'table' | 'grid')}>
-            <TabsList>
-              <TabsTrigger value="table">Table</TabsTrigger>
-              <TabsTrigger value="grid">Grid</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-        
-        <div className="p-4">
-          <BookTable
-            books={books}
-            isLoading={isLoading}
-            onEdit={handleEditBook}
-            onDelete={handleDeleteBookClick}
-            view={view}
-          />
-          
-          <div className="mt-4 flex justify-center">
-            <BookPagination
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
+    <div className="min-h-screen bg-background transition-colors duration-200">
+      <div className="container mx-auto p-4 space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-foreground">Book Dashboard</h1>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <Button onClick={handleAddBook}>Add New Book</Button>
           </div>
         </div>
+        
+        <BookFilters
+          onSearch={handleSearch}
+          onGenreFilter={handleGenreFilter}
+          onStatusFilter={handleStatusFilter}
+        />
+        
+        <div className="bg-card rounded-md shadow-sm border">
+          <div className="p-4 border-b flex justify-between items-center">
+            <h2 className="text-lg font-medium text-foreground">Books ({totalBooks})</h2>
+            <Tabs defaultValue="table" value={view} onValueChange={(v) => setView(v as 'table' | 'grid')}>
+              <TabsList>
+                <TabsTrigger value="table">Table</TabsTrigger>
+                <TabsTrigger value="grid">Grid</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+          
+          <div className="p-4">
+            <BookTable
+              books={books}
+              isLoading={isLoading}
+              onEdit={handleEditBook}
+              onDelete={handleDeleteBookClick}
+              view={view}
+            />
+            
+            <div className="mt-4 flex justify-center">
+              <BookPagination
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          </div>
+        </div>
+        
+        {/* Modals */}
+        <BookFormModal
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
+          onSubmit={handleCreateBookSubmit}
+          isSubmitting={isCreating}
+          mode="add"
+        />
+        
+        <BookFormModal
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setBookToEdit(undefined);
+          }}
+          book={bookToEdit}
+          onSubmit={handleUpdateBookSubmit}
+          isSubmitting={isUpdating}
+          mode="edit"
+        />
+        
+        <ConfirmationDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={() => {
+            setIsDeleteDialogOpen(false);
+            setBookToDelete(undefined);
+          }}
+          onConfirm={confirmDeleteBook}
+          title="Delete Book"
+          description={`Are you sure you want to delete "${bookToDelete?.title}"? This action cannot be undone.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          variant="destructive"
+        />
       </div>
-      
-      {/* Modals */}
-      <BookFormModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSubmit={handleCreateBookSubmit}
-        isSubmitting={isCreating}
-        mode="add"
-      />
-      
-      <BookFormModal
-        isOpen={isEditModalOpen}
-        onClose={() => {
-          setIsEditModalOpen(false);
-          setBookToEdit(undefined);
-        }}
-        book={bookToEdit}
-        onSubmit={handleUpdateBookSubmit}
-        isSubmitting={isUpdating}
-        mode="edit"
-      />
-      
-      <ConfirmationDialog
-        isOpen={isDeleteDialogOpen}
-        onClose={() => {
-          setIsDeleteDialogOpen(false);
-          setBookToDelete(undefined);
-        }}
-        onConfirm={confirmDeleteBook}
-        title="Delete Book"
-        description={`Are you sure you want to delete "${bookToDelete?.title}"? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-        variant="destructive"
-      />
     </div>
   );
 };
